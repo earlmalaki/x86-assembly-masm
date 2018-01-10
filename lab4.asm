@@ -1,0 +1,108 @@
+; Earl Timothy Malaki
+; CMSC 131 Lab
+; Lab 4 - Loop instruction
+
+
+TITLE LOOP4 USING LOOP INSTRUCTION (.EXE MODEL/FORMAT)
+; -------------------
+STACKSEG SEGMENT PARA 'Stack'
+STACKSEG ENDS
+; -------------------
+DATASEG SEGMENT PARA 'Data'
+	STRING_DIGITS DB "Digits: ", '$'
+	STRING_UPPERCASE DB "Uppercase: ", '$'
+	STRING_LOWERCASE DB "Lowercase: ", '$'
+	CHAR_SPACE DB 20H, '$'
+DATASEG ENDS
+; -------------------
+CODESEG SEGMENT PARA 'Code'
+	ASSUME SS:STACKSEG, DS:DATASEG, CS:CODESEG
+
+START:
+	MOV AX, DATASEG
+	MOV DS, AX
+
+
+	; -------------------------------
+	; display "Digits: "
+	MOV AH, 09H
+	LEA DX, STRING_DIGITS
+	INT 21H
+
+	; SET COUNTER & POINTER
+	MOV CX, 10
+	MOV AL, 30H
+
+	DISP_DIGITS:
+		MOV AH, 02H
+		MOV DL, AL
+		INT 21H
+
+		MOV AH, 09H
+		LEA DX, CHAR_SPACE
+		INT 21H
+
+		INC AL
+		LOOP DISP_DIGITS
+
+	; dispay new line
+	MOV AH, 02H
+	MOV DX, 0AH
+	INT 21H
+
+
+	; -------------------------------
+	; display "Uppercase: "
+	MOV AH, 09H
+	LEA DX, STRING_UPPERCASE
+	INT 21H
+
+	; SET COUNTER & POINTER
+	MOV CX, 26
+	MOV AL, 41H
+
+	DISP_BIG_LETS:
+		MOV AH, 02H
+		MOV DL, AL
+		INT 21H
+
+		MOV AH, 09H
+		LEA DX, CHAR_SPACE
+		INT 21H
+
+		INC AL
+		LOOP DISP_BIG_LETS
+
+	MOV AH, 02H
+	MOV DX, 0AH
+	INT 21H
+
+
+	; -------------------------------
+	; display "Lowercase: "
+	MOV AH, 09H
+	LEA DX, STRING_LOWERCASE
+	INT 21H
+
+	; SET COUNTER & POINTER
+	MOV CX, 26
+	MOV AL, 61H
+
+	DISP_SMALL_LETS:
+		MOV AH, 02H
+		MOV DL, AL
+		INT 21H
+
+		MOV AH, 09H
+		LEA DX, CHAR_SPACE
+		INT 21H
+
+		INC AL
+		LOOP DISP_SMALL_LETS
+
+
+EXIT:
+	MOV AH, 4CH
+	INT 21H
+CODESEG ENDS
+END START
